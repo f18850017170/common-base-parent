@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("label/")
+@RequestMapping("label")
 public class LabelController {
 //	@Reference(url = "dubbo://127.0.0.1:20880",version = ILabelProvider.VERSION)
 	@Reference(version = ILabelProvider.VERSION)
