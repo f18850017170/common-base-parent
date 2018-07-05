@@ -17,6 +17,7 @@
         <module>common-web</module>
         <module>common-metadata</module>
         <module>common-provider</module>
+        <module>common-scheduler</module>
     </modules>
     <packaging>pom</packaging>
 
