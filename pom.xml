@@ -20,6 +20,7 @@
         <module>common-scheduler</module>
         <module>common-async</module>
         <module>common-base</module>
+        <module>common-integrated</module>
     </modules>
     <packaging>pom</packaging>
 
