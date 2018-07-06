@@ -9,6 +9,9 @@ import cn.vonfly.metadata.service.ILabelService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundValueOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +23,11 @@ public class LabelController {
 	private ILabelProvider labelProvider;
 	@Autowired
 	private ILabelService labelService;
-
+	@Autowired
+	private RedisTemplate stringRedisTemplate;
 	@RequestMapping("insert")
 	public void insert(Label label) {
+
 		labelService.insert(label);
 	}
 
@@ -34,6 +39,12 @@ public class LabelController {
 	@RequestMapping("list")
 	public BasePageResponse<LabelVo> list() {
 		BasePageRequest<LabelVo> request = new BasePageRequest<LabelVo>(1,2,null);
-		return labelProvider.query(request);
+		BasePageResponse<LabelVo> response = labelProvider.query(request);
+		BoundValueOperations valueOps = stringRedisTemplate
+				.boundValueOps(response.getData().iterator().next().getContent());
+		Boolean setIfAbsent = valueOps.setIfAbsent("0");
+		valueOps.increment(1);
+		System.out.println(valueOps.get());
+		return response;
 	}
 }
