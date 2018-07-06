@@ -21,6 +21,10 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.spatial4j</groupId>
             <artifactId>spatial4j</artifactId>
         </dependency>

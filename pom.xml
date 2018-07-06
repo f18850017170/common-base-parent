@@ -42,11 +42,16 @@
         <httpclient.version>4.5.5</httpclient.version>
         <spatial4j.version>0.5</spatial4j.version>
         <geohash.version>1.3.0</geohash.version>
+        <thumbnailator.version>0.4.8</thumbnailator.version>
     </properties>
     <dependencyManagement>
 
         <dependencies>
-
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.spatial4j</groupId>
                 <artifactId>spatial4j</artifactId>
