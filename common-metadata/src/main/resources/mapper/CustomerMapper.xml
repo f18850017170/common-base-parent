@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.vonfly.metadata.dao.CustomerDao" >
+    <sql id="BASE_TABLE">
+        customer
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        id as id,`name` as `name` ,longitude as longitude, latitude as latitude,geoHash as geo_hash
+    </sql>
+
+    <insert id="insert" parameterType="cn.vonfly.metadata.model.Customer">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,`name`,longitude,latitude,geo_hash
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            #{id},#{`name`},#{longitude},#{latitude},#{geoHash}
+        </trim>
+    </insert>
+    <select id="queryByLocation" resultType="cn.vonfly.metadata.model.Customer">
+        SELECT <include refid="BASE_COLUMN"/>
+        from <include refid="BASE_TABLE"/> t
+        WHERE t.geo_hash LIKE CONCAT(#{encodeLatLon},'%')
+        and (longitude BETWEEN #{rectangle.minX} AND #{rectangle.maxX})
+        AND (latitude BETWEEN #{rectangle.minY} AND #{rectangle.maxY})
+    </select>
+</mapper>
