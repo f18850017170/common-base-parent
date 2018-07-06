@@ -6,17 +6,17 @@
     </sql>
 
     <sql id="BASE_COLUMN">
-        id as id,`name` as `name` ,longitude as longitude, latitude as latitude,geoHash as geo_hash
+        id as id,`name` as `name` ,status as status,longitude as longitude, latitude as latitude,geo_hash as geoHash
     </sql>
 
     <insert id="insert" parameterType="cn.vonfly.metadata.model.Customer">
         INSERT INTO
         <include refid="BASE_TABLE"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            id,`name`,longitude,latitude,geo_hash
+            id,`name`,status,longitude,latitude,geo_hash
         </trim>
         <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
-            #{id},#{`name`},#{longitude},#{latitude},#{geoHash}
+            #{id},#{name},#{status},#{longitude},#{latitude},#{geoHash}
         </trim>
     </insert>
     <select id="queryByLocation" resultType="cn.vonfly.metadata.model.Customer">

@@ -1,6 +1,7 @@
 package cn.vonfly.common.provider;
 
 import cn.vonfly.common.api.ICustomerProvider;
+import cn.vonfly.common.base.utils.LocationUtils;
 import cn.vonfly.common.dto.common.CustomerVo;
 import cn.vonfly.common.dto.common.LabelVo;
 import cn.vonfly.common.dto.request.BasePageRequest;
@@ -35,6 +36,10 @@ public class CustomerProviderImpl implements ICustomerProvider {
 			pageInfo.getList().forEach(item->{
 				CustomerVo customerVo = new CustomerVo();
 				BeanUtils.copyProperties(item,customerVo);
+				Double distance = LocationUtils
+						.calcDistance(request.getReq().getLatitude(), request.getReq().getLongitude(),
+								item.getLatitude(), item.getLongitude());
+				customerVo.setDistance(LocationUtils.distanceConvert2Meter(distance));
 				data.add(customerVo);
 			});
 		}

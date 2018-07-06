@@ -1,7 +1,10 @@
 package cn.vonfly.metadata.model;
 
+import cn.vonfly.common.dto.enumcode.SimpleStatus;
+
 public class Customer {
 	private Long id;
+	private SimpleStatus status;
 	private String name;
 	private Double longitude;
 	private Double latitude;
@@ -45,5 +48,13 @@ public class Customer {
 
 	public void setGeoHash(String geoHash) {
 		this.geoHash = geoHash;
+	}
+
+	public SimpleStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(SimpleStatus status) {
+		this.status = status;
 	}
 }

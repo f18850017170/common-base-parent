@@ -53,7 +53,7 @@ public class LocationUtils {
 	 * @param distance
 	 * @return
 	 */
-	private Double distanceConvert2Meter(Double distance) {
+	public static Double distanceConvert2Meter(Double distance) {
 		return new BigDecimal(distance * DistanceUtils.DEG_TO_KM * 1000)
 				.setScale(2, BigDecimal.ROUND_UP).doubleValue();
 	}

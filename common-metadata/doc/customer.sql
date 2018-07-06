@@ -21,6 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `status` tinyint(2) NOT NULL COMMENT '状态',
   `name` varchar(30) NOT NULL COMMENT '名称',
   `longitude` double(12,6) NOT NULL COMMENT '经度',
   `latitude` double(12,6) NOT NULL COMMENT '纬度',

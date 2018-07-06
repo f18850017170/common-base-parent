@@ -16,7 +16,7 @@
             id,`name`,content,create_time
         </trim>
         <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
-            #{id},#{`name`},#{content},#{createTime}
+            #{id},#{name},#{content},#{createTime}
         </trim>
     </insert>
 
