@@ -15,6 +15,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.TimeUnit;
+
 @RestController
 @RequestMapping("label")
 public class LabelController {
@@ -42,7 +44,9 @@ public class LabelController {
 		BasePageResponse<LabelVo> response = labelProvider.query(request);
 		BoundValueOperations valueOps = stringRedisTemplate
 				.boundValueOps(response.getData().iterator().next().getContent());
+		//bound后，直接指定超时时间无效
 		Boolean setIfAbsent = valueOps.setIfAbsent("0");
+		valueOps.expire(30, TimeUnit.MINUTES);//设置超时时间需要在put之后
 		valueOps.increment(1);
 		System.out.println(valueOps.get());
 		return response;
