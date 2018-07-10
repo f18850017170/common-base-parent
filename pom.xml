@@ -21,6 +21,7 @@
         <module>common-async</module>
         <module>common-base</module>
         <module>common-integrated</module>
+        <module>common-client</module>
     </modules>
     <packaging>pom</packaging>
 
