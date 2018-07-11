@@ -1,20 +1,24 @@
 package cn.vonfly.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import java.util.List;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /*1、通过配置文件来指定
@@ -27,18 +31,70 @@ spring.jackson.default-property-inclusion=non_null
 public class MyWebMvcConfigurer implements WebMvcConfigurer {
 	@Autowired
 	private ThymeleafViewResolver thymeleafViewResolver;
-	@Autowired
-	private ObjectMapper objectMapper;
+	private static final DateTimeFormatter LOCAL_DATE = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+	private static final DateTimeFormatter LOCAL_TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
+	private static final DateTimeFormatter LOCAL_TIME_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		ObjectMapper webObjectMapper = objectMapper.copy();
-		//配置ObjectMapper
-		webObjectMapper.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
-		webObjectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		converters.add(new MappingJackson2HttpMessageConverter(webObjectMapper));
+	@Bean
+	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+		MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
+		objectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		objectMapper.registerModule(javaTimeModule());
+		jsonConverter.setObjectMapper(objectMapper);
+		return jsonConverter;
 	}
+	@Bean
+	public JavaTimeModule javaTimeModule(){
+		JavaTimeModule javaTimeModule = new JavaTimeModule();
+		javaTimeModule.addDeserializer(LocalDate.class, new JsonDeserializer<LocalDate>() {
+			@Override
+			public LocalDate deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+					throws IOException {
+				return LocalDate.parse(jsonParser.getValueAsString(), LOCAL_DATE);
+			}
+		});
+		javaTimeModule.addSerializer(LocalDate.class,new JsonSerializer<LocalDate>() {
 
+			@Override
+			public void serialize(LocalDate localDate, JsonGenerator jsonGenerator,
+					SerializerProvider serializerProvider) throws IOException {
+				jsonGenerator.writeString(localDate.format(LOCAL_DATE));
+			}
+		});
+		javaTimeModule.addDeserializer(LocalTime.class, new JsonDeserializer<LocalTime>() {
+			@Override
+			public LocalTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+					throws IOException {
+				return LocalTime.parse(jsonParser.getValueAsString(), LOCAL_TIME);
+			}
+		});
+		javaTimeModule.addSerializer(LocalTime.class,new JsonSerializer<LocalTime>() {
+			@Override
+			public void serialize(LocalTime localTime, JsonGenerator jsonGenerator,
+					SerializerProvider serializerProvider)
+					throws IOException {
+				jsonGenerator.writeString(localTime.format(LOCAL_TIME));
+			}
+		});
+		javaTimeModule.addDeserializer(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+			@Override
+			public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+					throws IOException {
+				return LocalDateTime.parse(jsonParser.getValueAsString(),LOCAL_TIME_DATE);
+			}
+		});
+		javaTimeModule.addSerializer(LocalDateTime.class,new JsonSerializer<LocalDateTime>() {
+			@Override
+			public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator,
+					SerializerProvider serializerProvider) throws IOException {
+				jsonGenerator.writeString(localDateTime.format(LOCAL_TIME_DATE));
+
+			}
+		});
+		return javaTimeModule;
+	}
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		//指定静态资源本地路径
@@ -49,7 +105,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		//注册拦截器
-//		registry.addInterceptor(new MyInterceptor()).addPathPatterns("/app/**");
+		//		registry.addInterceptor(new MyInterceptor()).addPathPatterns("/app/**");
 	}
 
 	@Bean
@@ -64,4 +120,5 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		thymeleafViewResolver.setStaticVariables(variables);
 		return thymeleafViewResolver;
 	}
+
 }

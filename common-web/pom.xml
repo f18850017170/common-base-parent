@@ -23,7 +23,11 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!---->
-
+		<!--java8time format-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
 		<!--web-socket-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
