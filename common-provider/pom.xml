@@ -47,6 +47,31 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <!-- NOTE: We don't need a groupId specification because the group is
+             org.apache.maven.plugins ...which is assumed by default.-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${assembly.version}</version>
+                <executions>
+                    <!--执行器 mvn assembly:assembly-->
+                    <execution>
+                        <!--名称任意-->
+                        <id>custom-package</id>
+                        <!-- 绑定到package生命周期阶段上 -->
+                        <phase>package</phase>
+                        <goals>
+                            <!-- 该打包任务只运行一次 -->
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${project.basedir}/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
