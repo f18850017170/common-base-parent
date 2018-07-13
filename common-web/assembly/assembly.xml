@@ -11,7 +11,6 @@ http://maven.apache.org/ASSEMBLY/2.0.0 ">
     </formats>
     <!-- 指定打的包是否包含打包层目录（比如finalName是terminal-dispatch，当值为true，所有文件被放在包内的terminal-dispatch目录下，否则直接放在包的根目录下）-->
     <includeBaseDirectory>true</includeBaseDirectory>
-
     <!-- 指定将工程依赖的包打到包里的指定目录下 -->
     <dependencySets>
         <dependencySet>
@@ -30,7 +29,6 @@ http://maven.apache.org/ASSEMBLY/2.0.0 ">
             <directoryMode>0755</directoryMode>
         </dependencySet>-->
     </dependencySets>
-
     <!-- 指定要包含的文件集，可以定义多个fileSet -->
     <fileSets>
         <fileSet>
@@ -38,7 +36,7 @@ http://maven.apache.org/ASSEMBLY/2.0.0 ">
             <outputDirectory>/bin</outputDirectory><!-- 指定要将当前目录（<directory>标签中的目录放在归档文件（要打的jar包）bin目录下） -->
             <fileMode>0755</fileMode><!-- 设置文件 UNIX 属性，是一种读写权限 -->
             <directoryMode>0755</directoryMode><!-- 设置文件 UNIX 属性，是一种读写权限 -->
-            <filtered>true</filtered>
+            <filtered>false</filtered>
         </fileSet>
         <fileSet>
             <!-- 源目录，此处是把编译出来的class文件都输出到根目录下的classes目录-->
@@ -63,6 +61,7 @@ http://maven.apache.org/ASSEMBLY/2.0.0 ">
             <directory>${project.basedir}/assembly/lib</directory>
             <outputDirectory>lib</outputDirectory>
             <fileMode>0755</fileMode>
+            <filtered>false</filtered>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/assembly/logs</directory>
@@ -77,4 +76,5 @@ http://maven.apache.org/ASSEMBLY/2.0.0 ">
             <filtered>true</filtered>
         </file>
     </files>
+
 </assembly>
