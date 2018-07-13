@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--scan 是否扫描配置 scanPeriod扫描周期 debug打印日志组件的debug信息-->
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+    <!--设置上下文名称 每个logger都关联到logger上下文，默认上下文名称为“default”-->
+    <!--用于区分不同应用程序的记录,不同程序写相同日志文件的时候-->
+    <!--通过%contextName来打印日志上下文名称-->
+    <contextName>common-web-logback</contextName>
+
+    <!--定义变量值的标签,使“${}”来使用变量,定义的值会被插入到logger上下文中-->
+    <property name="log.path" value="logs" />
+    <!--%d{yyyy-MM-dd HH:mm:ss.SSS} 日期-->
+    <!--%contextName 日志上下文名称-->
+    <!--%thread 进程名字-->
+    <!--%-5level——日志级别，并且使用5个字符靠左对齐-->
+    <!--%logger{36}日志输出者的名字-->
+    <!--日志消息-->
+    <!--平台的换行符-->
+    <property name="console_pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="file_pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n"/>
+    <!--appender用来格式化日志输出节点，有俩个属性name和class，class用来指定哪种输出策略(控制台输出策略和文件输出策略)-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--日志过滤拦截器 ，滤掉DEBUG级别以下的日志不输出到文件中-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>${console_pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志过滤拦截器 ，滤掉DEBUG级别以下的日志不输出到文件中-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--定义了日志的切分方式——把每一天的日志归档到一个文件中-->
+            <fileNamePattern>${log.path}/info-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--只保留最近30天的日志-->
+            <maxHistory>30</maxHistory>
+            <!--指定日志文件的上限大小，例如设置为1GB的话，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${file_pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志过滤拦截器 ，滤掉DEBUG级别以下的日志不输出到文件中-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <!--<file>${log.path}/error.log</file>-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${log.path}/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>-->
+        <encoder>
+            <pattern>${file_pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--[level]:用来设置打印级别，大小写无关-->
+    <!--TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF 默认debug-->
+
+    <!--[appender-ref]包含零个或多个元素，标识这个appender将会添加到这个logger-->
+    <root level="info">
+        <appender-ref ref="console"/>
+        <appender-ref ref="info"/>
+        <appender-ref ref="error"/>
+    </root>
+
+    <!--[name]:java中的包或类的全路径-->
+
+    <!--[level]:设置打印级别 TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF,INHERITED,NULL-->
+    <!--INHERITED或者同义词NULL，代表强制执行上级的级别-->
+    <!--未设置此属性，那么当前logger将会继承上级的级别(root的配置)-->
+
+    <!--[additivity]:是否向上级logger传递打印信息。默认是true-->
+
+    <!--[appender-ref]没有设置appender时，此logger本身不打印任何信息，若additivity=false则不打印任何日志-->
+    <logger name="cn.vonfly.metadata.dao" level="DEBUG" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="info"/>
+    </logger>
+
+    <!--====================使用spring扩展profile支持============================-->
+    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
+    <!-- 生产环境. -->
+    <!--文件名称不是logback.xml，要以logback-spring.xml命名，才能启用-->
+    <!-- <springProfile name="test,dev">
+        <logger name="com.dudu.controller" level="info" />
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="com.dudu.controller" level="ERROR" />
+    </springProfile>-->
+    <!--=====================使用spring扩展profile支持===========================-->
+
+
+</configuration>

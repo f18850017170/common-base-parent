@@ -8,6 +8,8 @@ import cn.vonfly.metadata.model.Label;
 import cn.vonfly.metadata.service.ILabelService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("label")
 public class LabelController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 //	@Reference(url = "dubbo://127.0.0.1:20880",version = ILabelProvider.VERSION)
 	@Reference(version = ILabelProvider.VERSION)
 	private ILabelProvider labelProvider;
@@ -35,6 +38,11 @@ public class LabelController {
 
 	@RequestMapping("all")
 	public PageInfo<Label> selectAll() {
+		logger.info("info============");
+		logger.debug("debug============");
+		logger.warn("warn===========");
+		logger.error("error===========");
+		logger.trace("trace==========");
 		return labelService.selectAll();
 	}
 
